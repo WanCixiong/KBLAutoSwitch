@@ -2514,12 +2514,17 @@ Return
 Toggle_CN_CNEN: ; 切换中英文(中文)
 	If (TarHotFunFlag=0 && Outer_InputKey_Compatible=1 && A_ThisHotkey!="" && A_PriorKey!=RegExReplace(A_ThisHotkey, "iS)(~|\s|up|down)", ""))
 		Return
-	KBLState := (getIMEKBL(gl_Active_IMEwin_id)!=EN_Code?(getIMECode(gl_Active_IMEwin_id)!=0?0:1):2)
-	If (KBLState=0){
-		Gosub, Label_ToEnglishInputingOpera
-		setKBLlLayout(1)
-	}Else If (KBLState=1 || KBLState=2)
-		setKBLlLayout(0)
+	if GetKeyState("CapsLock", "T")  ; 检查当前大写状态
+	{
+		SetCapsLockState, Off
+	}else{
+		KBLState := (getIMEKBL(gl_Active_IMEwin_id)!=EN_Code?(getIMECode(gl_Active_IMEwin_id)!=0?0:1):2)
+		If (KBLState=0){
+			Gosub, Label_ToEnglishInputingOpera
+			setKBLlLayout(1)
+		}Else If (KBLState=1 || KBLState=2)
+			setKBLlLayout(0)
+	}
 Return
 
 Toggle_CN_EN: ; 切换中英文输入法
